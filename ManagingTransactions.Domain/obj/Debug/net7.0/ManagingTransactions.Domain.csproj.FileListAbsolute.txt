@@ -1,0 +1,17 @@
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\bin\Debug\net7.0\ManagingTransactions.Domain.deps.json
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\bin\Debug\net7.0\ManagingTransactions.Domain.dll
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\bin\Debug\net7.0\ManagingTransactions.Domain.pdb
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\bin\Debug\net7.0\ManagingTransactions.Contracts.dll
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\bin\Debug\net7.0\ManagingTransactions.Contracts.pdb
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.csproj.AssemblyReference.cache
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.AssemblyInfoInputs.cache
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.AssemblyInfo.cs
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.csproj.CoreCompileInputs.cache
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.csproj.CopyComplete
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.dll
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\refint\ManagingTransactions.Domain.dll
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.pdb
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ref\ManagingTransactions.Domain.dll
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\bin\Debug\net7.0\ManagingTransactions.Domain.runtimeconfig.json
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Domain\obj\Debug\net7.0\ManagingTransactions.Domain.genruntimeconfig.cache
