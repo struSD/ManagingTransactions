@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.API\\ManagingTransactions.Api.csproj": {}
+    "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.Api\\ManagingTransactions.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.API\\ManagingTransactions.Api.csproj": {
+    "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.Api\\ManagingTransactions.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.API\\ManagingTransactions.Api.csproj",
+        "projectUniqueName": "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.Api\\ManagingTransactions.Api.csproj",
         "projectName": "ManagingTransactions.Api",
-        "projectPath": "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.API\\ManagingTransactions.Api.csproj",
+        "projectPath": "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.Api\\ManagingTransactions.Api.csproj",
         "packagesPath": "C:\\Users\\danul\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.API\\obj\\",
+        "outputPath": "C:\\Users\\danul\\Downloads\\ManagingTransactions\\ManagingTransactions.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\danul\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -55,13 +55,21 @@
               "target": "Package",
               "version": "[11.1.0, )"
             },
+            "Microsoft.AspNetCore.Authentication.Google": {
+              "target": "Package",
+              "version": "[7.0.9, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[7.0.9, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.3, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
@@ -122,6 +130,14 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.9, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

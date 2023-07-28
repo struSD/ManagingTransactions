@@ -4,13 +4,13 @@ using CsvHelper.Configuration;
 using ManagingTransactions.Domain.Database;
 
 using MediatR;
+
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 
 public class ExportTransactionsQuery : IRequest<CsvFile>
 {
@@ -23,34 +23,27 @@ public class ExportTransactionsQuery : IRequest<CsvFile>
         Status = status;
     }
 }
-
 public class CsvFile
 {
     public byte[] Content { get; set; }
     public string FileName { get; set; }
 }
-
-
-
 public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactionsQuery, CsvFile>
 {
     private readonly ManagingTransactionsDbContext _dbContext;
-
     public ExportTransactionsQueryHandler(ManagingTransactionsDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-
     public async Task<CsvFile> Handle(ExportTransactionsQuery request, CancellationToken cancellationToken)
     {
-        // Запит на фільтрацію даних за вказаними фільтрами
+        //create and fill csv file
         var filteredTransactions = _dbContext.Transactions
             .Where(t => t.Type == request.Type && t.Status == request.Status)
             .ToList();
 
         if (filteredTransactions.Any())
         {
-            // Створення CSV файлу
             using (var memoryStream = new MemoryStream())
             {
                 using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
@@ -60,7 +53,6 @@ public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactions
                         csvWriter.WriteRecords(filteredTransactions);
                     }
                 }
-
                 return new CsvFile
                 {
                     Content = memoryStream.ToArray(),
@@ -68,7 +60,6 @@ public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactions
                 };
             }
         }
-
-        return null; // Повертаємо null, якщо не знайшли дані за вказаними фільтрами
+        return null;
     }
 }
