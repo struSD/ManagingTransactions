@@ -1,7 +1,11 @@
 using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using OfficeOpenXml;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -61,13 +65,11 @@ public class TransactionController : ControllerBase
                 }
             }
         }
-
         if (transactions.Any())
         {
             await _mediator.Send(new ProcessExcelDataCommand { Transactions = transactions });
             return Ok("Data from Excel uploaded and processed.");
         }
-
         return BadRequest("No data found in the Excel file.");
     }
 
@@ -80,7 +82,6 @@ public class TransactionController : ControllerBase
         {
             return File(csvFile.Content, "text/csv", csvFile.FileName);
         }
-
         return BadRequest("No data found for the specified filters.");
     }
 
@@ -101,7 +102,7 @@ public class TransactionController : ControllerBase
             return NoContent();
         }
 
-        return NotFound(); 
+        return NotFound();
     }
 }
 
