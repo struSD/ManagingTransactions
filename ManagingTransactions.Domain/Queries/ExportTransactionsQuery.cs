@@ -35,7 +35,7 @@ public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactions
     {
         _dbContext = dbContext;
     }
-    public async Task<CsvFile> Handle(ExportTransactionsQuery request, CancellationToken cancellationToken)
+    public Task<CsvFile> Handle(ExportTransactionsQuery request, CancellationToken cancellationToken)
     {
         //create and fill csv file
         var filteredTransactions = _dbContext.Transactions
@@ -53,13 +53,13 @@ public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactions
                         csvWriter.WriteRecords(filteredTransactions);
                     }
                 }
-                return new CsvFile
+                return Task.FromResult(new CsvFile
                 {
                     Content = memoryStream.ToArray(),
                     FileName = $"transactions_{request.Type}_{request.Status}.csv"
-                };
+                });
             }
         }
-        return null;
+        return Task.FromResult<CsvFile>(null);
     }
 }

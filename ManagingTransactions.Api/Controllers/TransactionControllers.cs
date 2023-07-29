@@ -1,22 +1,19 @@
+using ManagingTransaction.Domain.Commands;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 using OfficeOpenXml;
 
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-[Authorize]
-[ApiController]
 [Route("api/transactions")]
 public class TransactionController : ControllerBase
 {
@@ -26,8 +23,7 @@ public class TransactionController : ControllerBase
     {
         _mediator = mediator;
     }
-    
-    [Authorize]
+
     [HttpPost("upload")]
     public async Task<IActionResult> UploadExcel(IFormFile file)
     {
@@ -35,7 +31,7 @@ public class TransactionController : ControllerBase
             return BadRequest("No file uploaded.");
 
         var transactions = new List<TransactionData>();
-
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         using (var stream = new MemoryStream())
         {
             await file.CopyToAsync(stream);
@@ -52,7 +48,7 @@ public class TransactionController : ControllerBase
                             Status = worksheet.Cells[row, 2].Value.ToString(),
                             Type = worksheet.Cells[row, 3].Value.ToString(),
                             ClientName = worksheet.Cells[row, 4].Value.ToString(),
-                            Amount = decimal.Parse(worksheet.Cells[row, 5].Value.ToString())
+                            Amount = decimal.Parse(worksheet.Cells[row, 5].Value.ToString(), CultureInfo.InvariantCulture)
                         });
                     }
                 }
@@ -60,12 +56,11 @@ public class TransactionController : ControllerBase
         }
         if (transactions.Any())
         {
-            await _mediator.Send(new ProcessExcelDataCommand { Transactions = transactions });
+            await _mediator.Send(new TransactionImpotUpdateCommand { Transactions = transactions });
             return Ok("Data from Excel uploaded and processed.");
         }
         return BadRequest("No data found in the Excel file.");
     }
-    [Authorize]
     [HttpGet("export")]
     public async Task<IActionResult> ExportTransactions(string type, string status)
     {
@@ -77,14 +72,12 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found for the specified filters.");
     }
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter filter)
     {
         var transactions = await _mediator.Send(new GetTransactionsQuery { Filter = filter });
         return Ok(transactions);
     }
-    [Authorize]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] UpdateTransactionStatus model)
     {

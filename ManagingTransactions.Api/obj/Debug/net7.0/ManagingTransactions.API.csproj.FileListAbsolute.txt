@@ -54,12 +54,3 @@ C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug
 C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\ManagingTransactions.Contracts.pdb
 C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\MediatR.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\CsvHelper.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.API\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Abstractions.dll
-C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.Google.dll

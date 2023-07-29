@@ -11,6 +11,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ManagingTransaction.Domain.Commands;
+
 public class TransactionData
 {
     public int TransactionId { get; set; }
@@ -19,21 +21,21 @@ public class TransactionData
     public string ClientName { get; set; }
     public decimal Amount { get; set; }
 }
-public class ProcessExcelDataCommand : IRequest
+public class TransactionImpotUpdateCommand : IRequest
 {
     public List<TransactionData> Transactions { get; set; }
 }
 
-public class ProcessExcelDataCommandHandler : IRequestHandler<ProcessExcelDataCommand>
+public class TransactionImpotUpdateCommandHandler : IRequestHandler<TransactionImpotUpdateCommand>
 {
     private readonly ManagingTransactionsDbContext _dbContext;
 
-    public ProcessExcelDataCommandHandler(ManagingTransactionsDbContext dbContext)
+    public TransactionImpotUpdateCommandHandler(ManagingTransactionsDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(ProcessExcelDataCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(TransactionImpotUpdateCommand request, CancellationToken cancellationToken)
     {
         foreach (var transactionData in request.Transactions)
         {

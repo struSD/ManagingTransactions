@@ -16,6 +16,6 @@ public class ManagingTransactionsDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ManagingTransaction;Username=user_name;Password=pass;");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=ManagingTransaction;Username=fill_me;Password=fill_me;");
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-
+using ManagingTransaction.Domain.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +17,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(typeof(ExportTransactionsQuery));
+builder.Services.AddMediatR(typeof(GetTransactionsQuery));
+builder.Services.AddMediatR(typeof(TransactionImpotUpdateCommand));
+builder.Services.AddMediatR(typeof(UpdateTransactionStatusCommand));
+
 builder.Services.Configure<AppConfiguration>(builder.Configuration);
 builder.Services.AddDbContext<ManagingTransactionsDbContext>((sp, options) =>
 {
