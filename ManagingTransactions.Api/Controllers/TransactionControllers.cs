@@ -23,8 +23,7 @@ public class TransactionController : ControllerBase
     {
         _mediator = mediator;
     }
-
-    [HttpPost("upload")]
+    [HttpPost("upload"),Authorize]
     public async Task<IActionResult> UploadExcel(IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -40,7 +39,7 @@ public class TransactionController : ControllerBase
                 var worksheet = package.Workbook.Worksheets.FirstOrDefault();
                 if (worksheet != null)
                 {
-                    for (int row = 2; row <= worksheet.Dimension.End.Row; row++)
+                    for (int row = 2; row <= worksheet.Dimension.Rows; row++)
                     {
                         transactions.Add(new TransactionData
                         {
@@ -61,7 +60,7 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found in the Excel file.");
     }
-    [HttpGet("export")]
+    [HttpGet("export"),Authorize]
     public async Task<IActionResult> ExportTransactions(string type, string status)
     {
         var csvFile = await _mediator.Send(new ExportTransactionsQuery(type, status));
@@ -72,13 +71,13 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found for the specified filters.");
     }
-    [HttpGet]
+    [HttpGet,Authorize]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter filter)
     {
         var transactions = await _mediator.Send(new GetTransactionsQuery { Filter = filter });
         return Ok(transactions);
     }
-    [HttpPut("{id}/status")]
+    [HttpPut("{id}/status"),Authorize]
     public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] UpdateTransactionStatus model)
     {
         var result = await _mediator.Send(new UpdateTransactionStatusCommand { TransactionId = id, Status = model.Status });

@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "hhmj2koxDOrTpKtrYHDw/iKs0j5faCymn4lCAaHlUXY=",
-  "Source": "ManagingTransactions.API",
-  "BasePath": "_content/ManagingTransactions.API",
+  "Hash": "tEz5DqMZngxzPR29KBd3OR9I0hZjLlsn78TrpR7TOJ0=",
+  "Source": "ManagingTransactions.Api",
+  "BasePath": "_content/ManagingTransactions.Api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
