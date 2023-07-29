@@ -23,7 +23,8 @@ public class TransactionController : ControllerBase
     {
         _mediator = mediator;
     }
-    [HttpPost("upload"),Authorize]
+
+    [HttpPost("upload"), Authorize]
     public async Task<IActionResult> UploadExcel(IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -41,13 +42,21 @@ public class TransactionController : ControllerBase
                 {
                     for (int row = 2; row <= worksheet.Dimension.Rows; row++)
                     {
+                        string amountValue = worksheet.Cells[row, 5].Value.ToString();
+
+                        // Check if the string contains a period, which indicates the decimal part of the number
+                        if (amountValue.Contains("."))
+                        {
+                            // If a period is found, replace it with a comma to ensure the correct numeric format
+                            amountValue = amountValue.Replace(".", ",");
+                        }
                         transactions.Add(new TransactionData
                         {
                             TransactionId = int.Parse(worksheet.Cells[row, 1].Value.ToString()),
                             Status = worksheet.Cells[row, 2].Value.ToString(),
                             Type = worksheet.Cells[row, 3].Value.ToString(),
                             ClientName = worksheet.Cells[row, 4].Value.ToString(),
-                            Amount = decimal.Parse(worksheet.Cells[row, 5].Value.ToString(), CultureInfo.InvariantCulture)
+                            Amount = decimal.Parse(amountValue)
                         });
                     }
                 }
@@ -60,7 +69,8 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found in the Excel file.");
     }
-    [HttpGet("export"),Authorize]
+
+    [HttpGet("export"), Authorize]
     public async Task<IActionResult> ExportTransactions(string type, string status)
     {
         var csvFile = await _mediator.Send(new ExportTransactionsQuery(type, status));
@@ -71,13 +81,15 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found for the specified filters.");
     }
-    [HttpGet,Authorize]
+
+    [HttpGet, Authorize]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter filter)
     {
         var transactions = await _mediator.Send(new GetTransactionsQuery { Filter = filter });
         return Ok(transactions);
     }
-    [HttpPut("{id}/status"),Authorize]
+
+    [HttpPut("{id}/status"), Authorize]
     public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] UpdateTransactionStatus model)
     {
         var result = await _mediator.Send(new UpdateTransactionStatusCommand { TransactionId = id, Status = model.Status });

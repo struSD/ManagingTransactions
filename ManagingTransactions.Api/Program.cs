@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(opt =>
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
-            ValidIssuer = "CodeMaze",
+            ValidIssuer = "struSD",
             ValidAudience = "https://localhost:5014",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tnNgZGbpcq7PDEJ3RGHXw6WdDbs28mM3"))
         };

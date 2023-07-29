@@ -1,23 +1,14 @@
+using System;
+using ManagingTransaction.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace UsingAuthorizationWithSwagger.Controllers
 {
-public class LoginModel
-    {
-        [Required(ErrorMessage="Email Required")]
-        public string UserName { get; set; }
-        [Required(ErrorMessage = "Password Required")]
-        public string Password { get; set; }
-    }
-
     [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -36,7 +27,7 @@ public class LoginModel
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
                 var tokenOptions = new JwtSecurityToken(
-                    issuer: "CodeMaze",
+                    issuer: "struSD",
                     audience: "https://localhost:5014",
                     claims: new List<Claim>(),
                     expires: DateTime.Now.AddMinutes(30),
