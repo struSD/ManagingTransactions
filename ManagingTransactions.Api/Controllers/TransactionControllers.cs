@@ -1,19 +1,14 @@
 using ManagingTransaction.Domain.Commands;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 using OfficeOpenXml;
-
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 [Route("api/transactions")]
 public class TransactionController : ControllerBase
 {

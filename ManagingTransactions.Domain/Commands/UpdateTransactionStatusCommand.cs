@@ -1,7 +1,5 @@
 using ManagingTransactions.Domain.Database;
-
 using MediatR;
-
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +28,6 @@ public class UpdateTransactionStatusCommandHandler : IRequestHandler<UpdateTrans
         {
             return false;
         }
-        //update status
         transaction.Status = request.Status;
         await _dbContext.SaveChangesAsync(cancellationToken);
         return true;

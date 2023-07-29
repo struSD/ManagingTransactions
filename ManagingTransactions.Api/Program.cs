@@ -1,8 +1,6 @@
 using ManagingTransaction.Api.Cofiguration;
 using MediatR;
-
 using ManagingTransactions.Domain.Database;
-
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
