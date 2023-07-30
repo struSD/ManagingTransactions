@@ -35,14 +35,17 @@ public class TransactionImpotUpdateCommandHandler : IRequestHandler<TransactionI
     {
         foreach (var transactionData in request.Transactions)
         {
+            //searches for a transaction with the specified TransactionId in the DB, and the query result is stored in the existingTransaction variable
             var existingTransaction = await _dbContext.Transactions.FirstOrDefaultAsync(t => t.TransactionId == transactionData.TransactionId);
 
             if (existingTransaction != null)
             {
+                //updates the status if the transaction exists
                 existingTransaction.Status = transactionData.Status;
             }
             else
             {
+                //if it doesn't exist, it creates it
                 var newTransaction = new Transaction
                 {
                     TransactionId = transactionData.TransactionId,
@@ -56,6 +59,7 @@ public class TransactionImpotUpdateCommandHandler : IRequestHandler<TransactionI
             }
         }
         await _dbContext.SaveChangesAsync(cancellationToken);
+        //returns a Unit.Value indicating the successful completion of processing the request without returning any additional data or results.
         return Unit.Value;
     }
 }

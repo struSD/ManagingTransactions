@@ -37,7 +37,7 @@ public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactions
     }
     public Task<CsvFile> Handle(ExportTransactionsQuery request, CancellationToken cancellationToken)
     {
-        //create and fill csv file
+        //finds transactions according to the specified parameters
         var filteredTransactions = _dbContext.Transactions
             .Where(t => t.Type == request.Type && t.Status == request.Status)
             .ToList();

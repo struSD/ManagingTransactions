@@ -28,22 +28,22 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
     {
         IQueryable<Transaction> query = _dbContext.Transactions;
 
-        //Filter by types of transactions, if they are specified
+        //filter by types of transactions, if they are specified
         if (request.Filter?.Types != null && request.Filter.Types.Any())
         {
             query = query.Where(t => request.Filter.Types.Contains(t.Type));
         }
-        //Filter by the status of the transaction, if it is specified
+        //filter by the status of the transaction, if it is specified
         if (!string.IsNullOrEmpty(request.Filter?.Status))
         {
             query = query.Where(t => t.Status == request.Filter.Status);
         }
-        //Ffilter by the client's name, if it is specified
+        //filter by the client's name, if it is specified
         if (!string.IsNullOrEmpty(request.Filter?.ClientName))
         {
             query = query.Where(t => t.ClientName.Contains(request.Filter.ClientName));
         }
-        //Return a list of transactions satisfying the specified filters
+        //return a list of transactions satisfying the specified filters
         return await query.ToListAsync(cancellationToken);
     }
 }

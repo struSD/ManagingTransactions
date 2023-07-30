@@ -22,12 +22,14 @@ public class UpdateTransactionStatusCommandHandler : IRequestHandler<UpdateTrans
     }
     public async Task<bool> Handle(UpdateTransactionStatusCommand request, CancellationToken cancellationToken)
     {
+        //looking for a transaction by transaction_id
         var transaction = await _dbContext.Transactions.FindAsync(request.TransactionId);
 
         if (transaction == null)
         {
             return false;
         }
+        //update transaction by transaction_id
         transaction.Status = request.Status;
         await _dbContext.SaveChangesAsync(cancellationToken);
         return true;
