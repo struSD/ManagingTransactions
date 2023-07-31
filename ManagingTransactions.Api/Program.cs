@@ -27,7 +27,7 @@ builder.Services.Configure<AppConfiguration>(builder.Configuration);
 builder.Services.AddDbContext<ManagingTransactionsDbContext>((sp, options) =>
 {
     var configuration = sp.GetRequiredService<IOptionsMonitor<AppConfiguration>>();
-    options.UseNpgsql(configuration.CurrentValue.ConectionString);
+    options.UseNpgsql(configuration.CurrentValue.ConnectionString);
 });
 
 builder.Services.AddAuthentication(opt =>

@@ -39,10 +39,10 @@ public class TransactionController : ControllerBase
                     {
                         string amountValue = worksheet.Cells[row, 5].Value.ToString();
 
-                        // Check if the string contains a period, which indicates the decimal part of the number
+                        // check if the string contains a period, which indicates the decimal part of the number
                         if (amountValue.Contains("."))
                         {
-                            // If a period is found, replace it with a comma to ensure the correct numeric format
+                            // if a period is found, replace it with a comma to ensure the correct numeric format
                             amountValue = amountValue.Replace(".", ",");
                         }
                         transactions.Add(new TransactionData
