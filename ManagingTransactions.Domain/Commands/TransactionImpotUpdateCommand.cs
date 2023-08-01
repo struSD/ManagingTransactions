@@ -39,17 +39,23 @@ public class TransactionImpotUpdateCommandHandler : IRequestHandler<TransactionI
     {
         foreach (var transactionData in request.Transactions)
         {
-            //searches for a transaction with the specified TransactionId in the DB, and the query result is stored in the existingTransaction variable
-            var existingTransaction = await _dbContext.Transactions.FirstOrDefaultAsync(t => t.TransactionId == transactionData.TransactionId);
+            //create the SQL query to search for a transaction by TransactionId
+            string selectQuery = "SELECT * FROM tbl_transaction WHERE transaction_id = @transaction_id";
+
+            //create the Npgsql parameter for the query
+            var transactionIdParam = new Npgsql.NpgsqlParameter("@transaction_id", NpgsqlTypes.NpgsqlDbType.Integer) { Value = transactionData.TransactionId };
+
+            //execute the query using NpgsqlCommand
+            var existingTransaction = await _dbContext.Transactions.FromSqlRaw(selectQuery, transactionIdParam).FirstOrDefaultAsync();
 
             if (existingTransaction != null)
             {
-                //updates the status if the transaction exists
+                //update the status if the transaction exists
                 existingTransaction.Status = transactionData.Status;
             }
             else
             {
-                //if it doesn't exist, it creates it
+                //if it doesnt exist create a new transaction
                 var newTransaction = new Transaction
                 {
                     TransactionId = transactionData.TransactionId,
@@ -62,7 +68,9 @@ public class TransactionImpotUpdateCommandHandler : IRequestHandler<TransactionI
                 _dbContext.Transactions.Add(newTransaction);
             }
         }
+
         await _dbContext.SaveChangesAsync(cancellationToken);
+
         //returns a Unit.Value indicating the successful completion of processing the request without returning any additional data or results.
         return Unit.Value;
     }
