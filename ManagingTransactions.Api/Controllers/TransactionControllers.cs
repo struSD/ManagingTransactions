@@ -1,9 +1,13 @@
 using ManagingTransaction.Domain.Commands;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using OfficeOpenXml;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,7 +23,7 @@ public class TransactionController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("upload")]
+    [HttpPost("upload"), Authorize]
     public async Task<IActionResult> UploadExcel(IFormFile file)
     {
         if (file == null || file.Length == 0)
@@ -39,10 +43,10 @@ public class TransactionController : ControllerBase
                     {
                         string amountValue = worksheet.Cells[row, 5].Value.ToString();
 
-                        // check if the string contains a period, which indicates the decimal part of the number
+                        //check if the string contains a period, which indicates the decimal part of the number
                         if (amountValue.Contains("."))
                         {
-                            // if a period is found, replace it with a comma to ensure the correct numeric format
+                            //if a period is found, replace it with a comma to ensure the correct numeric format
                             amountValue = amountValue.Replace(".", ",");
                         }
                         transactions.Add(new TransactionData
@@ -65,7 +69,7 @@ public class TransactionController : ControllerBase
         return BadRequest("No data found in the Excel file.");
     }
 
-    [HttpGet("export")]
+    [HttpGet("export"), Authorize]
     public async Task<IActionResult> ExportTransactions(string type, string status)
     {
         var csvFile = await _mediator.Send(new ExportTransactionsQuery(type, status));
@@ -77,14 +81,14 @@ public class TransactionController : ControllerBase
         return BadRequest("No data found for the specified filters.");
     }
 
-    [HttpGet]
+    [HttpGet, Authorize]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter filter)
     {
         var transactions = await _mediator.Send(new GetTransactionsQuery { Filter = filter });
         return Ok(transactions);
     }
 
-    [HttpPut("{id}/status")]
+    [HttpPut("{id}/status"), Authorize]
     public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] UpdateTransactionStatus model)
     {
         var result = await _mediator.Send(new UpdateTransactionStatusCommand { TransactionId = id, Status = model.Status });
