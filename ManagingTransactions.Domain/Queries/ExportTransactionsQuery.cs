@@ -5,6 +5,8 @@ using ManagingTransactions.Domain.Database;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -35,31 +37,66 @@ public class ExportTransactionsQueryHandler : IRequestHandler<ExportTransactions
     {
         _dbContext = dbContext;
     }
-    public Task<CsvFile> Handle(ExportTransactionsQuery request, CancellationToken cancellationToken)
+    public async Task<CsvFile> Handle(ExportTransactionsQuery request, CancellationToken cancellationToken)
     {
-        //finds transactions according to the specified parameters
-        var filteredTransactions = _dbContext.Transactions
-            .Where(t => t.Type == request.Type && t.Status == request.Status)
-            .ToList();
+        //create the SQL query to find transactions according to the specified parameters
+        string selectQuery = "SELECT * FROM tbl_transaction WHERE type = @type AND status = @status";
 
-        if (filteredTransactions.Any())
+        //create Npgsql parameters for the query
+        var typeParam = new Npgsql.NpgsqlParameter("@type", NpgsqlTypes.NpgsqlDbType.Text) { Value = request.Type };
+        var statusParam = new Npgsql.NpgsqlParameter("@status", NpgsqlTypes.NpgsqlDbType.Text) { Value = request.Status };
+
+        using (var connection = _dbContext.Database.GetDbConnection())
         {
-            using (var memoryStream = new MemoryStream())
+            await connection.OpenAsync(cancellationToken);
+
+            using (var command = connection.CreateCommand())
             {
-                using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                command.CommandText = selectQuery;
+                command.Parameters.Add(typeParam);
+                command.Parameters.Add(statusParam);
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
-                    using (var csvWriter = new CsvWriter(streamWriter, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                    if (reader.HasRows)
                     {
-                        csvWriter.WriteRecords(filteredTransactions);
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            using (var streamWriter = new StreamWriter(memoryStream, Encoding.UTF8))
+                            {
+                                using (var csvWriter = new CsvWriter(streamWriter, new CsvConfiguration(CultureInfo.InvariantCulture)))
+                                {
+                                    //write the header row
+                                    for (int i = 0; i < reader.FieldCount; i++)
+                                    {
+                                        csvWriter.WriteField(reader.GetName(i));
+                                    }
+                                    csvWriter.NextRecord();
+
+                                    //write the data rows
+                                    while (await reader.ReadAsync(cancellationToken))
+                                    {
+                                        for (int i = 0; i < reader.FieldCount; i++)
+                                        {
+                                            csvWriter.WriteField(reader.GetValue(i));
+                                        }
+                                        csvWriter.NextRecord();
+                                    }
+                                }
+                            }
+
+                            return new CsvFile
+                            {
+                                Content = memoryStream.ToArray(),
+                                FileName = $"transactions_{request.Type}_{request.Status}.csv"
+                            };
+                        }
                     }
                 }
-                return Task.FromResult(new CsvFile
-                {
-                    Content = memoryStream.ToArray(),
-                    FileName = $"transactions_{request.Type}_{request.Status}.csv"
-                });
             }
         }
-        return Task.FromResult<CsvFile>(null);
+
+
+        return null;
     }
 }
