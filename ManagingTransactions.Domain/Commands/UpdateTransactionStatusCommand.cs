@@ -1,5 +1,12 @@
 using ManagingTransactions.Domain.Database;
+
 using MediatR;
+
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+
+using Npgsql;
+
 using System.Threading;
 using System.Threading.Tasks;
 
