@@ -29,16 +29,16 @@ public class UpdateTransactionStatusCommandHandler : IRequestHandler<UpdateTrans
     }
     public async Task<bool> Handle(UpdateTransactionStatusCommand request, CancellationToken cancellationToken)
     {
-        //looking for a transaction by transaction_id
-        var transaction = await _dbContext.Transactions.FindAsync(request.TransactionId);
+        // Create the SQL query
+        string updateQuery = "UPDATE tbl_transaction SET Status = @status WHERE transaction_id = @transaction_id";
 
-        if (transaction == null)
-        {
-            return false;
-        }
-        //update transaction by transaction_id
-        transaction.Status = request.Status;
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        return true;
+        // Create Npgsql parameters for the query
+        var statusParam = new NpgsqlParameter("@status", NpgsqlTypes.NpgsqlDbType.Varchar) { Value = request.Status };
+        var transactionIdParam = new NpgsqlParameter("@transaction_id", NpgsqlTypes.NpgsqlDbType.Integer) { Value = request.TransactionId };
+
+        // Execute the query using SqlCommand
+        int rowsAffected = await _dbContext.Database.ExecuteSqlRawAsync(updateQuery, statusParam, transactionIdParam);
+
+        return rowsAffected > 0;
     }
 }
