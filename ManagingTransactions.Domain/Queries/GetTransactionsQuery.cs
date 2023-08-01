@@ -30,35 +30,35 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
     }
     public async Task<List<Transaction>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        // Create the SQL query
-        string selectQuery = "SELECT * FROM tbl_transaction WHERE 1 = 1"; // Dummy condition to start the WHERE clause
+        //create the SQL query
+        string selectQuery = "SELECT * FROM tbl_transaction WHERE 1 = 1"; //dummy condition to start the WHERE clause
 
-        // Create a list to hold the query parameters
+        //create a list to hold the query parameters
         var parameters = new List<Npgsql.NpgsqlParameter>();
 
-        // Filter by types of transactions, if they are specified
+        //filter by types of transactions, if they are specified
         if (request.Filter?.Types != null && request.Filter.Types.Any())
         {
-            selectQuery += " AND Type IN (" + string.Join(", ", request.Filter.Types.Select((_, i) => "@type" + i)) + ")";
+            selectQuery += " AND type IN (" + string.Join(", ", request.Filter.Types.Select((_, i) => "@type" + i)) + ")";
             parameters.AddRange(request.Filter.Types.Select((type, i) =>
                 new Npgsql.NpgsqlParameter("@type" + i, NpgsqlTypes.NpgsqlDbType.Text) { Value = type }));
         }
 
-        // Filter by the status of the transaction, if it is specified
+        //filter by the status of the transaction, if it is specified
         if (!string.IsNullOrEmpty(request.Filter?.Status))
         {
             selectQuery += " AND status = @status";
             parameters.Add(new Npgsql.NpgsqlParameter("@status", NpgsqlTypes.NpgsqlDbType.Text) { Value = request.Filter.Status });
         }
 
-        // Filter by the client's name, if it is specified
+        //filter by the client's name, if it is specified
         if (!string.IsNullOrEmpty(request.Filter?.ClientName))
         {
             selectQuery += " AND client_name LIKE @client_name";
             parameters.Add(new Npgsql.NpgsqlParameter("@client_name", NpgsqlTypes.NpgsqlDbType.Text) { Value = $"%{request.Filter.ClientName}%" });
         }
 
-        // Execute the query using NpgsqlCommand
+        //execute the query using NpgsqlCommand
         var transactions = new List<Transaction>();
 
         using (var connection = _dbContext.Database.GetDbConnection())
@@ -74,7 +74,6 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                 {
                     while (await reader.ReadAsync(cancellationToken))
                     {
-                        // Create a new Transaction object and populate its properties from the data reader
                         var transaction = new Transaction
                         {
                             TransactionId = reader.GetInt32(reader.GetOrdinal("transaction_id")),
@@ -82,7 +81,7 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
                             Type = reader.GetString(reader.GetOrdinal("type")),
                             ClientName = reader.GetString(reader.GetOrdinal("client_name")),
                             Amount = reader.GetDecimal(reader.GetOrdinal("amount"))
-                            // Add other properties as needed based on your model
+                            
                         };
 
                         transactions.Add(transaction);
