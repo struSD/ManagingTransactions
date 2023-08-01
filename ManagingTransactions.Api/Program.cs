@@ -11,12 +11,17 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System;
+using System.Reflection;
+using System.IO;
+using ManagingTransactions.Domain.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+
 
 builder.Services.AddMediatR(typeof(ExportTransactionsQuery));
 builder.Services.AddMediatR(typeof(GetTransactionsQuery));
@@ -50,10 +55,24 @@ builder.Services.AddAuthentication(opt =>
         };
     });
 
-builder.Services.AddSwaggerGen(opt =>
+builder.Services.AddSwaggerGen(options =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
-    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.SwaggerDoc("v2", new OpenApiInfo
+    {
+        Version = "v2 ",
+        Title = "Managing Transactions API by SQL queries",
+        Description = "Web API for managing transactions has been created by struSD",
+        Contact = new OpenApiContact
+        {
+            Name = "github",
+            Url = new Uri("https://github.com/struSD")
+        }
+    });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
         Description = "Please enter token",
@@ -62,7 +81,7 @@ builder.Services.AddSwaggerGen(opt =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -83,7 +102,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v2/swagger.json", "v2");
+});
 }
 app.UseAuthorization();
 app.MapControllers();
