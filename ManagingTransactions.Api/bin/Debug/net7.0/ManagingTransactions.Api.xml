@@ -8,8 +8,6 @@
             <summary>
             Auth userName = "test" password = "test1"
             </summary>
-            <response code="200">Token generated</response>
-            <response code="401">Incorrect login or pass</response>
         </member>
         <member name="M:UsingAuthorizationWithSwagger.Controllers.TransactionController.UploadExcel(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
@@ -26,12 +24,12 @@
         </member>
         <member name="M:UsingAuthorizationWithSwagger.Controllers.TransactionController.GetTransactions(ManagingTransactions.Domain.Queries.TransactionFilter)">
             <summary>
-            Get filtered data by Types[], Status, ClientName.
+            Get filtered file .csv by Types[], Status, ClientName.
             </summary>
         </member>
         <member name="M:UsingAuthorizationWithSwagger.Controllers.TransactionController.UpdateTransactionStatus(System.Int32,ManagingTransaction.Domain.Commands.UpdateTransactionStatus)">
             <summary>
-            Change of status by ID.
+            Change status transaction by ID.
             </summary>
             <param name="id">Enter the ID transaction in which you want to change the status.</param>
             <param name="model"></param>
