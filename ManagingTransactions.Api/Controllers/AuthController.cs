@@ -7,40 +7,42 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace UsingAuthorizationWithSwagger.Controllers
+namespace UsingAuthorizationWithSwagger.Controllers;
+
+[ApiController]
+[Route("api/auth")]
+public class AuthController : ControllerBase
 {
-    [Route("api/auth")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    /// <summary>
+    /// Auth userName = "test" password = "test1"
+    /// </summary>
+    [HttpPost]
+    public IActionResult Login(LoginModel model)
     {
-        [HttpPost]
-        public IActionResult Login(LoginModel model)
+        if (model == null)
         {
-            if (model == null)
-            {
-                return BadRequest("Invalid client request");
-            }
+            return BadRequest("Invalid client request");
+        }
 
-            if (model.UserName == "test" && model.Password == "test1")
-            {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tnNgZGbpcq7PDEJ3RGHXw6WdDbs28mM3"));
-                var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+        if (model.UserName == "test" && model.Password == "test1")
+        {
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("tnNgZGbpcq7PDEJ3RGHXw6WdDbs28mM3"));
+            var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-                var tokenOptions = new JwtSecurityToken(
-                    issuer: "struSD",
-                    audience: "https://localhost:5014",
-                    claims: new List<Claim>(),
-                    expires: DateTime.Now.AddMinutes(30),
-                    signingCredentials: signinCredentials
-                );
+            var tokenOptions = new JwtSecurityToken(
+                issuer: "struSD",
+                audience: "https://localhost:5014",
+                claims: new List<Claim>(),
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: signinCredentials
+            );
 
-                var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-                return Ok(new { Token = tokenString });
-            }
-            else
-            {
-                return Unauthorized();
-            }
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            return Ok(new { Token = tokenString });
+        }
+        else
+        {
+            return Unauthorized();
         }
     }
 }

@@ -7,6 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ManagingTransactions.Domain.Queries;
+
+
 public class TransactionFilter
 {
     public List<string> Types { get; set; }

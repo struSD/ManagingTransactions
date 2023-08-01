@@ -1,13 +1,22 @@
 using ManagingTransaction.Domain.Commands;
+
+using ManagingTransactions.Domain.Queries;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using OfficeOpenXml;
+
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+namespace UsingAuthorizationWithSwagger.Controllers;
+
 
 [Route("api/transactions")]
 public class TransactionController : ControllerBase
@@ -18,7 +27,9 @@ public class TransactionController : ControllerBase
     {
         _mediator = mediator;
     }
-
+    /// <summary>
+    /// Uploading and updating from excel file.
+    /// </summary>
     [HttpPost("upload"), Authorize]
     public async Task<IActionResult> UploadExcel(IFormFile file)
     {
@@ -64,7 +75,12 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found in the Excel file.");
     }
-
+    /// <summary>
+    /// Export the file according to the specified parameters.
+    /// </summary>
+    /// <param name="type">Enter the transaction type</param>
+    /// <param name="status">Enter the transaction status</param>
+    /// <returns></returns>
     [HttpGet("export"), Authorize]
     public async Task<IActionResult> ExportTransactions(string type, string status)
     {
@@ -76,14 +92,20 @@ public class TransactionController : ControllerBase
         }
         return BadRequest("No data found for the specified filters.");
     }
-
+    /// <summary>
+    /// Get filtered file .csv by Types[], Status, ClientName.
+    /// </summary>
     [HttpGet, Authorize]
     public async Task<IActionResult> GetTransactions([FromQuery] TransactionFilter filter)
     {
         var transactions = await _mediator.Send(new GetTransactionsQuery { Filter = filter });
         return Ok(transactions);
     }
-
+    /// <summary>
+    /// Change status transaction by ID.
+    /// </summary>
+    /// <param name="id">Enter the ID transaction in which you want to change the status.</param>
+    /// <param name="model"></param>
     [HttpPut("{id}/status"), Authorize]
     public async Task<IActionResult> UpdateTransactionStatus(int id, [FromBody] UpdateTransactionStatus model)
     {

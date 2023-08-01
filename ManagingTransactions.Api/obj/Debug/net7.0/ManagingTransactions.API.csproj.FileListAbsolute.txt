@@ -62,3 +62,5 @@ C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug
 C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
 C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\bin\Debug\net7.0\ManagingTransactions.Api.xml
+C:\Users\danul\Downloads\ManagingTransactions\ManagingTransactions.Api\obj\Debug\net7.0\ManagingTransactions.Api.xml

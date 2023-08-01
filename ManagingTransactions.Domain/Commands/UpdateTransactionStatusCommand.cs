@@ -3,6 +3,10 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ManagingTransaction.Domain.Commands;
+
+
+
 public class UpdateTransactionStatus
 {
     public string Status { get; set; }

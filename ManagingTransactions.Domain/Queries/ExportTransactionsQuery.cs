@@ -12,6 +12,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+namespace ManagingTransactions.Domain.Queries;
+
 public class ExportTransactionsQuery : IRequest<CsvFile>
 {
     public string Type { get; }
