@@ -1,7 +1,11 @@
 using ManagingTransaction.Contracts.Database;
+
 using ManagingTransactions.Domain.Database;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -26,24 +30,67 @@ public class GetTransactionsQueryHandler : IRequestHandler<GetTransactionsQuery,
     }
     public async Task<List<Transaction>> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
     {
-        IQueryable<Transaction> query = _dbContext.Transactions;
+        // Create the SQL query
+        string selectQuery = "SELECT * FROM tbl_transaction WHERE 1 = 1"; // Dummy condition to start the WHERE clause
 
-        //filter by types of transactions, if they are specified
+        // Create a list to hold the query parameters
+        var parameters = new List<Npgsql.NpgsqlParameter>();
+
+        // Filter by types of transactions, if they are specified
         if (request.Filter?.Types != null && request.Filter.Types.Any())
         {
-            query = query.Where(t => request.Filter.Types.Contains(t.Type));
+            selectQuery += " AND Type IN (" + string.Join(", ", request.Filter.Types.Select((_, i) => "@type" + i)) + ")";
+            parameters.AddRange(request.Filter.Types.Select((type, i) =>
+                new Npgsql.NpgsqlParameter("@type" + i, NpgsqlTypes.NpgsqlDbType.Text) { Value = type }));
         }
-        //filter by the status of the transaction, if it is specified
+
+        // Filter by the status of the transaction, if it is specified
         if (!string.IsNullOrEmpty(request.Filter?.Status))
         {
-            query = query.Where(t => t.Status == request.Filter.Status);
+            selectQuery += " AND status = @status";
+            parameters.Add(new Npgsql.NpgsqlParameter("@status", NpgsqlTypes.NpgsqlDbType.Text) { Value = request.Filter.Status });
         }
-        //filter by the client's name, if it is specified
+
+        // Filter by the client's name, if it is specified
         if (!string.IsNullOrEmpty(request.Filter?.ClientName))
         {
-            query = query.Where(t => t.ClientName.Contains(request.Filter.ClientName));
+            selectQuery += " AND client_name LIKE @client_name";
+            parameters.Add(new Npgsql.NpgsqlParameter("@client_name", NpgsqlTypes.NpgsqlDbType.Text) { Value = $"%{request.Filter.ClientName}%" });
         }
-        //return a list of transactions satisfying the specified filters
-        return await query.ToListAsync(cancellationToken);
+
+        // Execute the query using NpgsqlCommand
+        var transactions = new List<Transaction>();
+
+        using (var connection = _dbContext.Database.GetDbConnection())
+        {
+            await connection.OpenAsync(cancellationToken);
+
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = selectQuery;
+                command.Parameters.AddRange(parameters.ToArray());
+
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                {
+                    while (await reader.ReadAsync(cancellationToken))
+                    {
+                        // Create a new Transaction object and populate its properties from the data reader
+                        var transaction = new Transaction
+                        {
+                            TransactionId = reader.GetInt32(reader.GetOrdinal("transaction_id")),
+                            Status = reader.GetString(reader.GetOrdinal("status")),
+                            Type = reader.GetString(reader.GetOrdinal("type")),
+                            ClientName = reader.GetString(reader.GetOrdinal("client_name")),
+                            Amount = reader.GetDecimal(reader.GetOrdinal("amount"))
+                            // Add other properties as needed based on your model
+                        };
+
+                        transactions.Add(transaction);
+                    }
+                }
+            }
+        }
+
+        return transactions;
     }
 }
